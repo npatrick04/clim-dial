@@ -13,11 +13,12 @@
 ;;; You should have received a copy of the GNU Lesser General Public License
 ;;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-(defpackage #:clim-dial
-  (:use #:clim #:clim-lisp)
-  (:export :dial-pane
-	   
-	   :dial-radius
-	   :dial-arc-start
-	   :dial-arc-end))
+(asdf:defsystem #:clim-dial
+  :description "A simple dial gadget for CLIM"
+  :author "Nick Patrick <npatrick04@gmail.com>"
+  :license "GNU LGPLv3"
+  :serial t
+  :depends-on (:mcclim)
+  :components ((:file "package")
+               (:file "clim-dial")))
 
