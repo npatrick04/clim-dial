@@ -30,17 +30,25 @@
 			    :min-height diameter :height diameter)))
 
 (defun clamp (value min max)
-  (if (< value min) min
-      (if (> value max) max value)))
+  (cond ((< value min) min)
+	((> value max) max)
+	(t value)))
 
 (defgeneric convert-value-to-angle (pane))
+(defgeneric dial-arc-range (dial))
+
+(defmethod dial-arc-range ((pane dial-pane))
+  (- (dial-arc-end pane)
+     (dial-arc-start pane)))
 
 (defmethod convert-value-to-angle ((pane dial-pane))
   (let ((range (gadget-range pane)))
-    ;; Percentage through range times angular range
-    (* (/ (gadget-value pane) range)
-       (- (dial-arc-end pane)
-	  (dial-arc-start pane)))))
+    ;; Percentage through range times angular range + arc-start
+    (+ (dial-arc-start pane)
+       (* (/ (- (gadget-value pane)
+		(gadget-min-value pane))
+	     range)
+	  (dial-arc-range pane)))))
 
 (defmethod handle-repaint ((pane dial-pane) region)
   (declare (ignore region))

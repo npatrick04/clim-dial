@@ -2,30 +2,44 @@
 
 (define-application-frame dial-test ()
   ()
-  (:panes (dial (make-pane 'dial-pane
-			   :value 0
-			   :min-value 0
-			   :max-value 100))
-	  (value (horizontally ()
-		   (make-pane 'text-field-pane
-			      :editable-p nil
-			      :value "Dial value")
-		   (make-pane 'text-field-pane
-			      :value "0"
-			      :editable-p t
-			      :value-changed-callback
-			      (lambda (value-gadget value)
-				(declare (ignore value-gadget))
-				(let ((dial (find-pane-named *application-frame* 'dial))
-				      (new-value
-				       (handler-case (parse-integer value)
-					 (error nil))))
-				  (when (and dial new-value)
-				    (setf (gadget-value dial) new-value))))))))
+  (:panes (dial1 (make-pane 'dial-pane
+			    :value 0
+			    :min-value 0
+			    :max-value 100))
+	  (dial2 (make-pane 'dial-pane
+			    :value 0
+			    :min-value -100
+			    :max-value 100
+			    :arc-start 0
+			    :arc-start pi
+			    :orientation :clockwise))
+	  (value
+	   (outlining ()
+	     (horizontally ()
+	       (3/8 (make-pane 'label-pane
+			       :label "Dial value"))
+	       (5/8 (make-pane 'text-field-pane
+			       :value "0"
+			       :editable-p t
+			       :value-changed-callback
+			       (lambda (value-gadget value)
+				 (declare (ignore value-gadget))
+				 (let ((dial1 (find-pane-named *application-frame* 'dial1))
+				       (dial2 (find-pane-named *application-frame* 'dial2))
+				       (new-value
+					(handler-case (parse-integer value :junk-allowed t)
+					  (error nil))))
+				   (unless new-value
+				     (setf new-value 0))
+				   (when (and dial1 dial2)
+				     (setf (gadget-value dial1) new-value)
+				     (setf (gadget-value dial2) new-value))))))))))
   (:layouts (default (vertically ()
-		       dial
-		       value))))
+		       dial1
+		       value
+		       dial2))))
 
 (defun test-dial ()
   (let ((frame (make-application-frame 'dial-test)))
-    (run-frame-top-level frame)))
+    (bt:make-thread (lambda () (run-frame-top-level frame)))
+    frame))
