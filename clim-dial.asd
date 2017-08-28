@@ -20,5 +20,7 @@
   :serial t
   :depends-on (:mcclim)
   :components ((:file "package")
-               (:file "clim-dial")))
+               (:file "dial")
+	       (:file "clock")))
+
 

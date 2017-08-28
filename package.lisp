@@ -15,9 +15,24 @@
 
 (defpackage #:clim-dial
   (:use #:clim #:clim-lisp)
-  (:export :dial-pane
-	   
+  (:export :dial
+
+	   :draw-dial
 	   :dial-radius
 	   :dial-arc-start
-	   :dial-arc-end))
+	   :dial-arc-end
+
+	   :dial-pane
+	   
+	   :clock-pane
+
+	   :clock-pane-diameter
+	   :clock-pane-border
+	   :clock-pane-second-hand
+	   :clock-pane-minute-hand
+	   :clock-pane-hour-hand
+
+	   :clock-second-spacing
+	   :clock-minute/second-ratio
+	   :clock-hour/second-ratio))
 
